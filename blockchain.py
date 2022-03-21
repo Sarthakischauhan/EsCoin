@@ -19,7 +19,7 @@ class Blockchain:
 			 "timestamp":time(),
 			 "transactions":self.current_transaction,
 			 "proof":proof,
-			 "previous_hash":previous_hash
+			 "previous_hash":previous_hash or self.hash(self.chain[-1])
 			 }
 		self.current_trasaction = []
 		self.chain.append(block)
@@ -50,7 +50,7 @@ class Blockchain:
 	
 	def proof_of_work(self,last_proof):
 		proof = 0
-		while not self.valid_proof(last_proof,proof):
+		while not self.valid_proof(proof,last_proof):
 			proof += 1
 
 		return proof
@@ -67,11 +67,12 @@ class Blockchain:
 
 		while index < len(chain):
 			block = chain[index]
-
 			if block["previous_hash"] != self.hash(previous_block):
+				print("Entered this block1")
 				return False
 
 			if not self.valid_proof(block["proof"],previous_block["proof"]):
+				print("Entered this block2")
 				return False
 
 			previous_block = block
@@ -88,14 +89,13 @@ class Blockchain:
        
 		for node in neighbours:
 			response = requests.get(f'http://{node}/chain')
-			print(response.status_code)
 			if response.status_code == 200:
-				print("run")
 				length = response.json()['length']
 				chain = response.json()['chain']
-
+				print(self.valid_chain(chain),max_len)
                 # Check if the length is longer and the chain is valid
 				if length > max_len and self.valid_chain(chain):
+					print("run")
 					max_len = length
 					new_chain = chain
 		

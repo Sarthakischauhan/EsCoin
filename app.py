@@ -1,4 +1,4 @@
-#! /usr/bin/env python3
+ #! /usr/bin/env python3
 
 from blockchain import Blockchain
 from flask import Flask,jsonify,request
@@ -16,7 +16,9 @@ node_identifier = str(uuid4()).replace('-', '')
 @app.route("/mine",methods=["GET"])
 def mine():
 	last_block = blockchain.last_block,
-	last_proof = last_block[0]["proof"]
+	last_block = last_block[0]
+	print(last_block)
+	last_proof = last_block["proof"]
 	
 
 	proof = blockchain.proof_of_work(last_proof)
